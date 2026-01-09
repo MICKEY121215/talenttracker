@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Roles</title>
+  </head>
+  <body>
+    <h2>Add Role</h2>
+    <form method="post">
+      <select name="client_id">
+        {% for c in clients %}
+        <option value="{{ c[0] }}">{{ c[1] }}</option>
+        {% endfor %}</select
+      ><br /><br />
+
+      <input
+        type="text"
+        name="title"
+        placeholder="Role title"
+        required
+      /><br /><br />
+      <textarea name="jd_text" placeholder="Job Description"></textarea
+      ><br /><br />
+
+      <select name="status">
+        <option>Open</option>
+        <option>Closed</option></select
+      ><br /><br />
+
+      <button>Add Role</button>
+    </form>
+
+    <h2>Roles</h2>
+    <table border="1">
+      <tr>
+        <th>ID</th>
+        <th>Client</th>
+        <th>Title</th>
+        <th>Status</th>
+      </tr>
+      {% for r in roles %}
+      <tr>
+        <td>{{ r[0] }}</td>
+        <td>{{ r[1] }}</td>
+        <td>{{ r[2] }}</td>
+        <td>{{ r[3] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <a href="/clients">Back to Clients</a>
+  </body>
+</html>
