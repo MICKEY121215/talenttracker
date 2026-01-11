@@ -2,51 +2,57 @@
 <html>
   <head>
     <title>Roles</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
   </head>
   <body>
-    <h2>Add Role</h2>
-    <form method="post">
-      <select name="client_id">
-        {% for c in clients %}
-        <option value="{{ c[0] }}">{{ c[1] }}</option>
-        {% endfor %}</select
-      ><br /><br />
+    <div class="container">
+      <h2>Add Role</h2>
+      <form method="post">
+        <label>Client</label>
+        <select name="client_id">
+          {% for c in clients %}
+          <option value="{{ c[0] }}">{{ c[1] }}</option>
+          {% endfor %}
+        </select>
 
-      <input
-        type="text"
-        name="title"
-        placeholder="Role title"
-        required
-      /><br /><br />
-      <textarea name="jd_text" placeholder="Job Description"></textarea
-      ><br /><br />
+        <label>Role Title</label>
+        <input type="text" name="title" required />
 
-      <select name="status">
-        <option>Open</option>
-        <option>Closed</option></select
-      ><br /><br />
+        <label>Job Description</label>
+        <textarea name="jd_text"></textarea>
 
-      <button>Add Role</button>
-    </form>
+        <label>Status</label>
+        <select name="status">
+          <option>Open</option>
+          <option>Closed</option>
+        </select>
 
-    <h2>Roles</h2>
-    <table border="1">
-      <tr>
-        <th>ID</th>
-        <th>Client</th>
-        <th>Title</th>
-        <th>Status</th>
-      </tr>
-      {% for r in roles %}
-      <tr>
-        <td>{{ r[0] }}</td>
-        <td>{{ r[1] }}</td>
-        <td>{{ r[2] }}</td>
-        <td>{{ r[3] }}</td>
-      </tr>
-      {% endfor %}
-    </table>
+        <button>Add Role</button>
+      </form>
 
-    <a href="/clients">Back to Clients</a>
+      <h2>Roles</h2>
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>Client</th>
+          <th>Role</th>
+          <th>Status</th>
+        </tr>
+        {% for r in roles %}
+        <tr>
+          <td>{{ r[0] }}</td>
+          <td>{{ r[1] }}</td>
+          <td>{{ r[2] }}</td>
+          <td>{{ r[3] }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+
+      <br />
+      <a href="/clients">← Back to Clients</a>
+    </div>
   </body>
 </html>
