@@ -25,6 +25,20 @@ def clients():
     db.close()
     return render_template("clients.html", clients=clients)
 
+@app.route("/delete_client/<int:client_id>")
+def delete_client(client_id):
+    db = get_db()
+    cur = db.cursor()
+
+    # First delete roles under this client
+    cur.execute("DELETE FROM Role WHERE client_id = ?", (client_id,))
+    # Then delete client
+    cur.execute("DELETE FROM Client WHERE client_id = ?", (client_id,))
+
+    db.commit()
+    db.close()
+    return redirect("/clients")
+
 # -------- ROLES --------
 @app.route("/roles", methods=["GET", "POST"])
 def roles():
@@ -56,3 +70,13 @@ def roles():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+@app.route("/delete_role/<int:role_id>")
+def delete_role(role_id):
+    db = get_db()
+    cur = db.cursor()
+
+    cur.execute("DELETE FROM Role WHERE role_id = ?", (role_id,))
+    db.commit()
+    db.close()
+    return redirect("/roles")
