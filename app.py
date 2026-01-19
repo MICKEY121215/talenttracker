@@ -30,11 +30,8 @@ def delete_client(client_id):
     db = get_db()
     cur = db.cursor()
 
-    # First delete roles under this client
     cur.execute("DELETE FROM Role WHERE client_id = ?", (client_id,))
-    # Then delete client
     cur.execute("DELETE FROM Client WHERE client_id = ?", (client_id,))
-
     db.commit()
     db.close()
     return redirect("/clients")
@@ -46,15 +43,15 @@ def roles():
     cur = db.cursor()
 
     if request.method == "POST":
-        client_id = request.form["client_id"]
-        title = request.form["title"]
-        jd_text = request.form["jd_text"]
-        status = request.form["status"]
-
         cur.execute("""
             INSERT INTO Role (client_id, title, jd_text, status)
             VALUES (?, ?, ?, ?)
-        """, (client_id, title, jd_text, status))
+        """, (
+            request.form["client_id"],
+            request.form["title"],
+            request.form["jd_text"],
+            request.form["status"]
+        ))
         db.commit()
 
     roles = cur.execute("""
@@ -65,11 +62,7 @@ def roles():
 
     clients = cur.execute("SELECT * FROM Client").fetchall()
     db.close()
-
     return render_template("roles.html", roles=roles, clients=clients)
-
-if __name__ == "__main__":
-    app.run(debug=True)
 
 @app.route("/delete_role/<int:role_id>")
 def delete_role(role_id):
@@ -80,3 +73,67 @@ def delete_role(role_id):
     db.commit()
     db.close()
     return redirect("/roles")
+
+# -------- CANDIDATES --------
+@app.route("/candidates", methods=["GET", "POST"])
+def candidates():
+    db = get_db()
+    cur = db.cursor()
+
+    if request.method == "POST":
+        cur.execute("""
+            INSERT INTO Candidate (name, linkedin_url, skills, experience_years)
+            VALUES (?, ?, ?, ?)
+        """, (
+            request.form["name"],
+            request.form["linkedin_url"],
+            request.form["skills"],
+            request.form["experience_years"]
+        ))
+        db.commit()
+
+    candidates = cur.execute("SELECT * FROM Candidate").fetchall()
+    db.close()
+    return render_template("candidates.html", candidates=candidates)
+
+# -------- APPLICATIONS --------
+@app.route("/applications", methods=["GET", "POST"])
+def applications():
+    db = get_db()
+    cur = db.cursor()
+
+    if request.method == "POST":
+        cur.execute("""
+            INSERT INTO Application (candidate_id, role_id, status)
+            VALUES (?, ?, ?)
+        """, (
+            request.form["candidate_id"],
+            request.form["role_id"],
+            request.form["status"]
+        ))
+        db.commit()
+
+    applications = cur.execute("""
+        SELECT Application.application_id,
+               Candidate.name,
+               Role.title,
+               Application.status
+        FROM Application
+        JOIN Candidate ON Application.candidate_id = Candidate.candidate_id
+        JOIN Role ON Application.role_id = Role.role_id
+    """).fetchall()
+
+    candidates = cur.execute("SELECT * FROM Candidate").fetchall()
+    roles = cur.execute("SELECT * FROM Role").fetchall()
+
+    db.close()
+    return render_template(
+        "applications.html",
+        applications=applications,
+        candidates=candidates,
+        roles=roles
+    )
+
+# -------- RUN APP (ALWAYS LAST) --------
+if __name__ == "__main__":
+    app.run(debug=True)
