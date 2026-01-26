@@ -42,13 +42,19 @@
           <th>Candidate</th>
           <th>Role</th>
           <th>Status</th>
+          <th>Action</th>
+
         </tr>
         {% for a in applications %}
         <tr>
+
           <td>{{ a[0] }}</td>
           <td>{{ a[1] }}</td>
           <td>{{ a[2] }}</td>
           <td>{{ a[3] }}</td>
+          <td>
+            <a href="/skill_match/{{ a[0] }}">View Skill Match</a>
+          </td>
         </tr>
         {% endfor %}
       </table>

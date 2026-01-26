@@ -6,6 +6,33 @@ app = Flask(__name__)
 def get_db():
     return sqlite3.connect("database.db")
 
+import re
+
+def skill_match(jd_text, candidate_skills):
+
+    stop_words = {
+        "looking", "for", "and", "with", "developer", "engineer",
+        "required", "experience", "in", "of", "a", "an", "the",
+        "skills", "knowledge", "role", "position"
+    }
+
+    jd_words = re.sub(r'[^\w\s]', '', jd_text.lower()).split()
+    cs_words = re.sub(r'[^\w\s]', '', candidate_skills.lower()).split()
+
+    jd_set = set(word for word in jd_words if word not in stop_words)
+    cs_set = set(cs_words)
+
+    matched = jd_set & cs_set
+    missing = jd_set - cs_set
+
+    if len(jd_set) == 0:
+        match_percent = 0.0
+    else:
+        match_percent = round((len(matched) / len(jd_set)) * 100, 2)
+
+    return matched, missing, match_percent
+
+
 @app.route("/")
 def home():
     return redirect("/clients")
@@ -132,6 +159,37 @@ def applications():
         applications=applications,
         candidates=candidates,
         roles=roles
+    )
+
+@app.route("/skill_match/<int:application_id>")
+def skill_match_view(application_id):
+    db = get_db()
+    cur = db.cursor()
+
+    app_data = cur.execute("""
+        SELECT Role.jd_text, Candidate.skills
+        FROM Application
+        JOIN Role ON Application.role_id = Role.role_id
+        JOIN Candidate ON Application.candidate_id = Candidate.candidate_id
+        WHERE Application.application_id = ?
+    """, (application_id,)).fetchone()
+
+    matched, missing, percentage = skill_match(app_data[0], app_data[1])
+
+    cur.execute("""
+        UPDATE Application
+        SET skill_match_percentage = ?
+        WHERE application_id = ?
+    """, (percentage, application_id))
+
+    db.commit()
+    db.close()
+
+    return render_template(
+        "skill_match.html",
+        matched=matched,
+        missing=missing,
+        percentage=percentage
     )
 
 # -------- RUN APP (ALWAYS LAST) --------

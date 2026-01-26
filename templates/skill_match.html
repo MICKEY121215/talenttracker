@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Skill Match</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Skill Match Result</h2>
+
+      <p><strong>Match Percentage:</strong> {{ percentage }}%</p>
+
+      <h3>Matched Skills</h3>
+      <ul>
+        {% for s in matched %}
+        <li>{{ s }}</li>
+        {% endfor %}
+      </ul>
+
+      <h3>Missing Skills</h3>
+      <ul>
+        {% for s in missing %}
+        <li>{{ s }}</li>
+        {% endfor %}
+      </ul>
+
+      <a href="/applications">← Back to Applications</a>
+    </div>
+  </body>
+</html>
