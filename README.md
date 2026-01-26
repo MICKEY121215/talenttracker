@@ -143,3 +143,77 @@ Supported recruitment statuses:
 - skill_match_percentage (to be used in Week 3)
 - last_updated
 
+# TalentTracker – Week 3
+
+## Project Overview
+TalentTracker is a Flask-based Applicant Tracking System (ATS).
+Week 3 focuses on adding **intelligence to the system** by implementing
+a **rule-based skill matching mechanism** between job descriptions and
+candidate skills.
+
+This enhances decision-making during recruitment by showing how well
+a candidate matches a job role.
+
+---
+
+## Week 3 Objectives
+- Implement skill matching logic
+- Compare job description skills with candidate skills
+- Identify matched and missing skills
+- Calculate skill match percentage
+- Store match percentage in the database
+- Display skill match results on the UI
+
+---
+
+## Skill Matching Concept
+
+The system compares:
+- **Job Description (JD)** – required skills for a role
+- **Candidate Skills** – skills mentioned in candidate profile
+
+### Formula Used
+
+Match Percentage = (Matched Skills / Total JD Skills) × 100
+
+
+---
+
+## Technologies Used
+- Python
+- Flask
+- SQLite
+- HTML
+- CSS
+- Regular Expressions (re module)
+
+---
+
+## Features Implemented in Week 3
+
+### 1. Skill Match Logic
+- Text normalization using regular expressions
+- Removal of non-skill (stop) words
+- Set-based comparison of skills
+- Accurate match percentage calculation
+
+### 2. Skill Match Result Page
+- Displays match percentage
+- Shows matched skills
+- Shows missing skills
+- Linked from Applications page
+
+### 3. Database Integration
+- Skill match percentage stored in Application table
+- Data updated dynamically when skill match is executed
+
+---
+
+## Execution Flow (Week 3)
+
+1. Add Client  
+2. Add Role with job description skills  
+3. Add Candidate with skills  
+4. Assign Candidate to Role  
+5. Click **View Skill Match** from Applications page  
+6. View skill match results  
