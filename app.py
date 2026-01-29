@@ -192,6 +192,23 @@ def skill_match_view(application_id):
         percentage=percentage
     )
 
+# -------- UPDATE --------
+@app.route("/update_status/<int:application_id>", methods=["POST"])
+def update_status(application_id):
+    new_status = request.form["status"]
+
+    db = get_db()
+    cur = db.cursor()
+    cur.execute("""
+        UPDATE Application
+        SET status = ?
+        WHERE application_id = ?
+    """, (new_status, application_id))
+    db.commit()
+    db.close()
+
+    return redirect("/applications")
+
 # -------- RUN APP (ALWAYS LAST) --------
 if __name__ == "__main__":
     app.run()
