@@ -194,4 +194,4 @@ def skill_match_view(application_id):
 
 # -------- RUN APP (ALWAYS LAST) --------
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
