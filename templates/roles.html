@@ -47,6 +47,7 @@
           <th>Client</th>
           <th>Role</th>
           <th>Status</th>
+          <th>JD File</th>
           <th>Action</th>
         </tr>
 
@@ -56,6 +57,10 @@
           <td>{{ r[1] }}</td>
           <td>{{ r[2] }}</td>
           <td>{{ r[3] }}</td>
+
+          <!-- JD FILE PATH -->
+          <td>{% if r[4] %} {{ r[4] }} {% else %} Not Uploaded {% endif %}</td>
+
           <td>
             <a
               href="/delete_role/{{ r[0] }}"

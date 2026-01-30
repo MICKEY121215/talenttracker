@@ -82,10 +82,14 @@ def roles():
         db.commit()
 
     roles = cur.execute("""
-        SELECT Role.role_id, Client.name, Role.title, Role.status
-        FROM Role
-        JOIN Client ON Role.client_id = Client.client_id
-    """).fetchall()
+    SELECT Role.role_id,
+           Client.name,
+           Role.title,
+           Role.status,
+           Role.jd_file_path
+    FROM Role
+    JOIN Client ON Role.client_id = Client.client_id
+""").fetchall()
 
     clients = cur.execute("SELECT * FROM Client").fetchall()
     db.close()
@@ -118,6 +122,17 @@ def candidates():
             request.form["experience_years"]
         ))
         db.commit()
+
+    candidates = cur.execute("""
+    SELECT candidate_id,
+           name,
+           linkedin_url,
+           skills,
+           experience_years,
+           resume_file_path
+    FROM Candidate
+""").fetchall()
+
 
     candidates = cur.execute("SELECT * FROM Candidate").fetchall()
     db.close()

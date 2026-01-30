@@ -44,6 +44,7 @@
           <th>Name</th>
           <th>Skills</th>
           <th>Experience</th>
+          <th>Resume</th>
         </tr>
 
         {% for c in candidates %}
@@ -52,6 +53,9 @@
           <td>{{ c[1] }}</td>
           <td>{{ c[3] }}</td>
           <td>{{ c[4] }}</td>
+
+          <!-- RESUME FILE PATH -->
+          <td>{% if c[5] %} {{ c[5] }} {% else %} Not Uploaded {% endif %}</td>
         </tr>
         {% endfor %}
       </table>
