@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Candidates</title>
@@ -7,19 +7,33 @@
       href="{{ url_for('static', filename='style.css') }}"
     />
   </head>
+
   <body>
     <div class="container">
       <h2>Add Candidate</h2>
 
-      <form method="post">
-        <input name="name" placeholder="Candidate name" required />
-        <input name="linkedin_url" placeholder="LinkedIn URL" />
-        <input name="skills" placeholder="Skills (comma separated)" />
+      <!-- IMPORTANT: enctype added -->
+      <form method="post" enctype="multipart/form-data">
+        <input type="text" name="name" placeholder="Candidate name" required />
+
+        <input type="text" name="linkedin_url" placeholder="LinkedIn URL" />
+
         <input
-          name="experience_years"
+          type="text"
+          name="skills"
+          placeholder="Skills (comma separated)"
+        />
+
+        <input
           type="number"
+          name="experience_years"
           placeholder="Experience (years)"
         />
+
+        <!-- NEW: Resume Upload -->
+        <label>Resume (PDF/DOC)</label>
+        <input type="file" name="resume" accept=".pdf,.doc,.docx" />
+
         <button>Add Candidate</button>
       </form>
 
@@ -31,6 +45,7 @@
           <th>Skills</th>
           <th>Experience</th>
         </tr>
+
         {% for c in candidates %}
         <tr>
           <td>{{ c[0] }}</td>
@@ -40,16 +55,15 @@
         </tr>
         {% endfor %}
       </table>
-     <body>
-  <div class="nav">
-    <a href="/clients">Clients</a> |
-    <a href="/roles">Roles</a> |
-    <a href="/candidates">Candidates</a> |
-    <a href="/applications">Applications</a>
-  </div>
-  <hr>
 
-  <div class="container">
+      <hr />
+
+      <!-- Navigation -->
+      <div class="nav">
+        <a href="/clients">Clients</a> | <a href="/roles">Roles</a> |
+        <a href="/candidates">Candidates</a> |
+        <a href="/applications">Applications</a>
+      </div>
     </div>
   </body>
 </html>
