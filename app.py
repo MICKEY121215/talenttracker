@@ -32,6 +32,19 @@ def skill_match(jd_text, candidate_skills):
 
     return matched, missing, match_percent
 
+@app.route("/dashboard")
+def dashboard():
+    db = get_db()
+    cur = db.cursor()
+
+    stats = cur.execute("""
+        SELECT status, COUNT(*) 
+        FROM Application 
+        GROUP BY status
+    """).fetchall()
+
+    db.close()
+    return render_template("dashboard.html", stats=stats)
 
 @app.route("/")
 def home():

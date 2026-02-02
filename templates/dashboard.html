@@ -1,0 +1,13 @@
+<h2>Recruitment Dashboard</h2>
+<table>
+  <tr>
+    <th>Status</th>
+    <th>Count</th>
+  </tr>
+  {% for s in stats %}
+  <tr>
+    <td>{{ s[0] }}</td>
+    <td>{{ s[1] }}</td>
+  </tr>
+  {% endfor %}
+</table>
