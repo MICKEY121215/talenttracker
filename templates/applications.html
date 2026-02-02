@@ -2,27 +2,40 @@
 <html>
   <head>
     <title>Applications</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
+
   <body>
     <div class="container">
       <h2>Assign Candidate to Role</h2>
 
-      <form method="post" action="/update_status/{{ a[0] }}">
-    <select name="status">
-      <option {{ 'selected' if a[3]=='Sourced' else '' }}>Sourced</option>
-      <option {{ 'selected' if a[3]=='Contacted' else '' }}>Contacted</option>
-      <option {{ 'selected' if a[3]=='Interviewing' else '' }}>Interviewing</option>
-      <option {{ 'selected' if a[3]=='Offered' else '' }}>Offered</option>
-      <option {{ 'selected' if a[3]=='Rejected' else '' }}>Rejected</option>
-    </select>
-    <button type="submit">Update</button>
-  </form>
+      <!-- ASSIGN FORM (UNCHANGED) -->
+      <form method="post">
+        <select name="candidate_id" required>
+          {% for c in candidates %}
+          <option value="{{ c[0] }}">{{ c[1] }}</option>
+          {% endfor %}
+        </select>
+
+        <select name="role_id" required>
+          {% for r in roles %}
+          <option value="{{ r[0] }}">{{ r[2] }}</option>
+          {% endfor %}
+        </select>
+
+        <select name="status" required>
+          <option selected>Sourced</option>
+          <option>Contacted</option>
+          <option>Interviewing</option>
+          <option>Offered</option>
+          <option>Rejected</option>
+        </select>
+
+        <button type="submit">Assign</button>
+      </form>
 
       <h2>Applications</h2>
+
       <table>
         <tr>
           <th>ID</th>
@@ -30,31 +43,44 @@
           <th>Role</th>
           <th>Status</th>
           <th>Action</th>
-
         </tr>
+
         {% for a in applications %}
         <tr>
-
           <td>{{ a[0] }}</td>
           <td>{{ a[1] }}</td>
           <td>{{ a[2] }}</td>
-          <td>{{ a[3] }}</td>
+
+          <!-- STATUS UPDATE FORM (CORRECT PLACE) -->
+          <td>
+            <form method="post" action="/update_status/{{ a[0] }}">
+              <select name="status">
+                <option {{ 'selected' if a[3]=='Sourced' else '' }}>Sourced</option>
+                <option {{ 'selected' if a[3]=='Contacted' else '' }}>Contacted</option>
+                <option {{ 'selected' if a[3]=='Interviewing' else '' }}>Interviewing</option>
+                <option {{ 'selected' if a[3]=='Offered' else '' }}>Offered</option>
+                <option {{ 'selected' if a[3]=='Rejected' else '' }}>Rejected</option>
+              </select>
+              <button type="submit">Update</button>
+            </form>
+          </td>
+
           <td>
             <a href="/skill_match/{{ a[0] }}">View Skill Match</a>
           </td>
         </tr>
         {% endfor %}
       </table>
-<body>
-  <div class="nav">
-    <a href="/clients">Clients</a> |
-    <a href="/roles">Roles</a> |
-    <a href="/candidates">Candidates</a> |
-    <a href="/applications">Applications</a>
-  </div>
-  <hr>
 
-  <div class="container">
+      <hr>
+
+      <!-- NAVIGATION -->
+      <div class="nav">
+        <a href="/clients">Clients</a> |
+        <a href="/roles">Roles</a> |
+        <a href="/candidates">Candidates</a> |
+        <a href="/applications">Applications</a>
+      </div>
     </div>
   </body>
 </html>
