@@ -1,76 +1,139 @@
+/* ===== Global ===== */
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Segoe UI", Arial, sans-serif;
   background-color: #f4f6f8;
   margin: 0;
   padding: 20px;
-}
-
-h2 {
   color: #333;
 }
 
-.container {
-  background: white;
-  padding: 20px;
-  border-radius: 6px;
-  width: 70%;
-  margin: auto;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* ===== Headings ===== */
+h2 {
+  color: #222;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 6px;
 }
 
+/* ===== Container ===== */
+.container {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 8px;
+  width: 75%;
+  margin: auto;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== Forms ===== */
 form {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+}
+
+label {
+  font-weight: 600;
+  margin-top: 10px;
+  display: block;
 }
 
 input,
 textarea,
 select {
-  padding: 8px;
+  padding: 10px;
   width: 100%;
-  margin: 6px 0;
+  margin: 8px 0 15px 0;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 14px;
 }
 
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* ===== Buttons ===== */
 button {
   background-color: #007bff;
   color: white;
-  padding: 8px 16px;
+  padding: 9px 18px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 14px;
   cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 }
 
 button:hover {
   background-color: #0056b3;
+  transform: translateY(-1px);
 }
 
+button:active {
+  transform: translateY(0);
+}
+
+/* ===== Tables ===== */
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 14px;
 }
 
 table th {
   background-color: #007bff;
   color: white;
+  padding: 12px;
+  text-align: left;
 }
 
-table th,
 table td {
   padding: 10px;
-  text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
-table tr:hover {
-  background-color: #f1f1f1;
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
+table tr:hover {
+  background-color: #eef4ff;
+}
+
+/* ===== Links ===== */
 a {
-  text-decoration: none;
   color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
 }
 
 a:hover {
   text-decoration: underline;
+}
+
+/* ===== Navigation ===== */
+.nav {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.nav a {
+  margin: 0 10px;
+  font-weight: 600;
+}
+
+/* ===== Status Dropdown (Applications Page) ===== */
+select[name="status"] {
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .container {
+    width: 95%;
+  }
 }
