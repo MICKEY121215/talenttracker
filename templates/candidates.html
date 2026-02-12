@@ -55,8 +55,19 @@
           <td>{{ c[3] }}</td>
           <td>{{ c[4] }}</td>
 
-          <!-- RESUME FILE PATH -->
           <td>{% if c[5] %} {{ c[5] }} {% else %} Not Uploaded {% endif %}</td>
+
+          <td>
+            <a
+              href="/delete_candidate/{{ c[0] }}"
+              onclick="
+                return confirm(
+                  'Are you sure you want to delete this candidate?',
+                );
+              "
+              >Delete
+            </a>
+          </td>
         </tr>
         {% endfor %}
       </table>
