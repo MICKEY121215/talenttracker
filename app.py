@@ -198,6 +198,32 @@ def candidates():
     db.close()
     return render_template("candidates.html", candidates=candidates)
 
+@app.route("/delete_candidate/<int:candidate_id>")
+def delete_candidate(candidate_id):
+    db = get_db()
+    cur = db.cursor()
+
+    # Get resume file path
+    cur.execute("SELECT resume_file_path FROM Candidate WHERE candidate_id = ?", (candidate_id,))
+    result = cur.fetchone()
+
+    # Delete resume file from disk
+    if result and result[0]:
+        import os
+        if os.path.exists(result[0]):
+            os.remove(result[0])
+
+    # Delete related applications first (important)
+    cur.execute("DELETE FROM Application WHERE candidate_id = ?", (candidate_id,))
+
+    # Delete candidate
+    cur.execute("DELETE FROM Candidate WHERE candidate_id = ?", (candidate_id,))
+
+    db.commit()
+    db.close()
+
+    return redirect("/candidates")
+
 
 # -------- APPLICATIONS --------
 @app.route("/applications", methods=["GET", "POST"])
