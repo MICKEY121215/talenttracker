@@ -25,9 +25,18 @@ SKILL_SET = {
 }
 
 def extract_skills(text):
-    words = set(text.split())
-    found_skills = words & SKILL_SET
-    return ", ".join(found_skills)
+    import re
+    clean_text = re.sub(r'[^\w\s]', ' ', text.lower())
+    words = set(clean_text.split())
+
+    found_skills = []
+
+    for skill in SKILL_SET:
+        if skill in clean_text:
+            found_skills.append(skill)
+
+    return ", ".join(sorted(found_skills))
+
 
 def skill_match(jd_text, candidate_skills):
 
