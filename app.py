@@ -111,7 +111,7 @@ def roles():
 
         jd_file = request.files.get("jd_file")
 
-        jd_text = request.form["jd_text"]
+        jd_text = request.form.get("jd_text", "")
         save_path = None
 
         if jd_file and jd_file.filename != "":
