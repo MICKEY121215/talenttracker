@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
+import pdfplumber
+import os
+
 
 app = Flask(__name__)
 
@@ -7,6 +10,24 @@ def get_db():
     return sqlite3.connect("database.db")
 
 import re
+
+def extract_text_from_pdf(file_path):
+    text = ""
+    with pdfplumber.open(file_path) as pdf:
+        for page in pdf.pages:
+            text += page.extract_text() or ""
+    return text.lower()
+
+SKILL_SET = {
+    "python", "java", "sql", "flask", "django",
+    "aws", "react", "javascript", "html",
+    "css", "mongodb", "machine", "learning"
+}
+
+def extract_skills(text):
+    words = set(text.split())
+    found_skills = words & SKILL_SET
+    return ", ".join(found_skills)
 
 def skill_match(jd_text, candidate_skills):
 
@@ -83,28 +104,45 @@ def roles():
     cur = db.cursor()
 
     if request.method == "POST":
+
+        client_id = request.form["client_id"]
+        title = request.form["title"]
+        status = request.form["status"]
+
+        jd_file = request.files.get("jd_file")
+
+        jd_text = request.form["jd_text"]
+        save_path = None
+
+        if jd_file and jd_file.filename != "":
+            os.makedirs("uploads/jds", exist_ok=True)
+
+            save_path = os.path.join("uploads/jds", jd_file.filename)
+            jd_file.save(save_path)
+
+            extracted_text = extract_text_from_pdf(save_path)
+            jd_text = extract_skills(extracted_text)
+
         cur.execute("""
-            INSERT INTO Role (client_id, title, jd_text, status)
-            VALUES (?, ?, ?, ?)
-        """, (
-            request.form["client_id"],
-            request.form["title"],
-            request.form["jd_text"],
-            request.form["status"]
-        ))
+            INSERT INTO Role 
+            (client_id, title, jd_text, jd_file_path, status)
+            VALUES (?, ?, ?, ?, ?)
+        """, (client_id, title, jd_text, save_path, status))
+
         db.commit()
 
     roles = cur.execute("""
-    SELECT Role.role_id,
-           Client.name,
-           Role.title,
-           Role.status,
-           Role.jd_file_path
-    FROM Role
-    JOIN Client ON Role.client_id = Client.client_id
-""").fetchall()
+        SELECT Role.role_id,
+               Client.name,
+               Role.title,
+               Role.status,
+               Role.jd_file_path
+        FROM Role
+        JOIN Client ON Role.client_id = Client.client_id
+    """).fetchall()
 
     clients = cur.execute("SELECT * FROM Client").fetchall()
+
     db.close()
     return render_template("roles.html", roles=roles, clients=clients)
 
@@ -116,7 +154,10 @@ def delete_role(role_id):
     cur.execute("DELETE FROM Role WHERE role_id = ?", (role_id,))
     db.commit()
     db.close()
+
     return redirect("/roles")
+
+
 
 # -------- CANDIDATES --------
 @app.route("/candidates", methods=["GET", "POST"])
@@ -125,31 +166,38 @@ def candidates():
     cur = db.cursor()
 
     if request.method == "POST":
+
+        name = request.form["name"]
+        linkedin = request.form["linkedin_url"]
+        experience = request.form["experience_years"]
+
+        resume_file = request.files.get("resume")
+
+        skills = request.form["skills"]
+        save_path = None
+
+        if resume_file and resume_file.filename != "":
+            os.makedirs("uploads/resumes", exist_ok=True)
+
+            save_path = os.path.join("uploads/resumes", resume_file.filename)
+            resume_file.save(save_path)
+
+            extracted_text = extract_text_from_pdf(save_path)
+            skills = extract_skills(extracted_text)
+
         cur.execute("""
-            INSERT INTO Candidate (name, linkedin_url, skills, experience_years)
-            VALUES (?, ?, ?, ?)
-        """, (
-            request.form["name"],
-            request.form["linkedin_url"],
-            request.form["skills"],
-            request.form["experience_years"]
-        ))
+            INSERT INTO Candidate 
+            (name, linkedin_url, skills, experience_years, resume_file_path)
+            VALUES (?, ?, ?, ?, ?)
+        """, (name, linkedin, skills, experience, save_path))
+
         db.commit()
 
-    candidates = cur.execute("""
-    SELECT candidate_id,
-           name,
-           linkedin_url,
-           skills,
-           experience_years,
-           resume_file_path
-    FROM Candidate
-""").fetchall()
-
-
     candidates = cur.execute("SELECT * FROM Candidate").fetchall()
+
     db.close()
     return render_template("candidates.html", candidates=candidates)
+
 
 # -------- APPLICATIONS --------
 @app.route("/applications", methods=["GET", "POST"])
