@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, flash
 import sqlite3
 import pdfplumber
 import os
@@ -87,9 +87,13 @@ def clients():
     cur = db.cursor()
 
     if request.method == "POST":
-        name = request.form["name"]
+        name = request.form["name"].strip()
+    try:
         cur.execute("INSERT INTO Client (name) VALUES (?)", (name,))
         db.commit()
+        flash("Client added successfully.", "success")
+    except sqlite3.IntegrityError:
+        flash("Client already exists.", "error")
 
     clients = cur.execute("SELECT * FROM Client").fetchall()
     db.close()
@@ -115,7 +119,7 @@ def roles():
     if request.method == "POST":
 
         client_id = request.form["client_id"]
-        title = request.form["title"]
+        title = request.form["title"].strip()
         status = request.form["status"]
 
         jd_file = request.files.get("jd_file")
@@ -135,13 +139,14 @@ def roles():
         try:
             cur.execute("""
               INSERT INTO Role 
-               (client_id, title, jd_text, jd_file_path, status)
-               VALUES (?, ?, ?, ?, ?)
-                """, (client_id, title, jd_text, save_path, status))
+              (client_id, title, jd_text, jd_file_path, status)
+            VALUES (?, ?, ?, ?, ?)
+             """, (client_id, title, jd_text, save_path, status))
             db.commit()
+            flash("Role added successfully.", "success")
 
         except sqlite3.IntegrityError:
-            print("Duplicate role prevented")
+            flash("This role already exists for the selected client.", "error")
 
     roles = cur.execute("""
         SELECT Role.role_id,
@@ -179,8 +184,8 @@ def candidates():
 
     if request.method == "POST":
 
-        name = request.form["name"]
-        linkedin = request.form["linkedin_url"]
+        name = request.form["name"].strip()
+        linkedin = request.form["linkedin_url"].strip()
         experience = request.form["experience_years"]
 
         resume_file = request.files.get("resume")
@@ -199,14 +204,14 @@ def candidates():
 
         try:
             cur.execute("""
-               INSERT INTO Candidate 
-               (name, linkedin_url, skills, experience_years, resume_file_path)
-               VALUES (?, ?, ?, ?, ?)
-               """, (name, linkedin, skills, experience, save_path))
+              INSERT INTO Candidate 
+              (name, linkedin_url, skills, experience_years, resume_file_path)
+              VALUES (?, ?, ?, ?, ?)
+              """, (name, linkedin, skills, experience, save_path))
             db.commit()
-
+            flash("Candidate added successfully.", "success")
         except sqlite3.IntegrityError:
-              print("Duplicate candidate prevented")
+            flash("Candidate already exists.", "error")
 
     candidates = cur.execute("SELECT * FROM Candidate").fetchall()
 
@@ -257,9 +262,10 @@ def applications():
             request.form["status"]
             ))
             db.commit()
-            
+            flash("Application created successfully.", "success")
+
         except sqlite3.IntegrityError:
-            print("Duplicate application prevented")
+            flash("This candidate is already assigned to this role.", "error")
 
 
     applications = cur.execute("""

@@ -1,12 +1,12 @@
-CREATE TABLE Client (
+CREATE TABLE IF NOT EXISTS Client (
     client_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL
+    name TEXT COLLATE NOCASE UNIQUE
 );
 
-CREATE TABLE Role (
+CREATE TABLE IF NOT EXISTS Role (
     role_id INTEGER PRIMARY KEY AUTOINCREMENT,
     client_id INTEGER,
-    title TEXT,
+    title TEXT COLLATE NOCASE,
     jd_text TEXT,
     jd_file_path TEXT,
     status TEXT,
@@ -14,17 +14,17 @@ CREATE TABLE Role (
     UNIQUE(client_id, title)
 );
 
-CREATE TABLE Candidate (
+CREATE TABLE IF NOT EXISTS Candidate (
     candidate_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    linkedin_url TEXT,
+    name TEXT COLLATE NOCASE,
+    linkedin_url TEXT COLLATE NOCASE,
     skills TEXT,
     experience_years INTEGER,
     resume_file_path TEXT,
     UNIQUE(name, linkedin_url)
 );
 
-CREATE TABLE Application (
+CREATE TABLE IF NOT EXISTS Application (
     application_id INTEGER PRIMARY KEY AUTOINCREMENT,
     candidate_id INTEGER,
     role_id INTEGER,

@@ -81,6 +81,15 @@
         <a href="/candidates">Candidates</a> |
         <a href="/applications">Applications</a>
       </div>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert {{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
     </div>
   </body>
 </html>

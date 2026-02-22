@@ -6,7 +6,7 @@ cur = conn.cursor()
 cur.execute("""
 CREATE TABLE IF NOT EXISTS Client (
     client_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT UNIQUE
+    name TEXT COLLATE NOCASE UNIQUE
 );
 """)
 
@@ -14,7 +14,7 @@ cur.execute("""
 CREATE TABLE IF NOT EXISTS Role (
     role_id INTEGER PRIMARY KEY AUTOINCREMENT,
     client_id INTEGER,
-    title TEXT,
+    title TEXT COLLATE NOCASE,
     jd_text TEXT,
     jd_file_path TEXT,
     status TEXT,
@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS Role (
 cur.execute("""
 CREATE TABLE IF NOT EXISTS Candidate (
     candidate_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    linkedin_url TEXT,
+    name TEXT COLLATE NOCASE,
+    linkedin_url TEXT COLLATE NOCASE,
     skills TEXT,
     experience_years INTEGER,
     resume_file_path TEXT,
