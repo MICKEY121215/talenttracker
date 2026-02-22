@@ -5,6 +5,7 @@ import os
 
 
 app = Flask(__name__)
+app.secret_key = "supersecretkey123"
 
 def get_db():
     return sqlite3.connect("database.db")
