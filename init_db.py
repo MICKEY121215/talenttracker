@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS Role (
     jd_text TEXT,
     jd_file_path TEXT,
     status TEXT,
-    FOREIGN KEY (client_id) REFERENCES Client(client_id)
+    FOREIGN KEY (client_id) REFERENCES Client(client_id),
+    UNIQUE(client_id, title)
 );
 """)
 
