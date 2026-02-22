@@ -88,12 +88,12 @@ def clients():
 
     if request.method == "POST":
         name = request.form["name"].strip()
-    try:
-        cur.execute("INSERT INTO Client (name) VALUES (?)", (name,))
-        db.commit()
-        flash("Client added successfully.", "success")
-    except sqlite3.IntegrityError:
-        flash("Client already exists.", "error")
+        try:
+           cur.execute("INSERT INTO Client (name) VALUES (?)", (name,))
+           db.commit()
+           flash("Client added successfully.", "success")
+        except sqlite3.IntegrityError:
+          flash("Client already exists.", "error")
 
     clients = cur.execute("SELECT * FROM Client").fetchall()
     db.close()
@@ -252,21 +252,21 @@ def applications():
     cur = db.cursor()
 
     if request.method == "POST":
+        candidate_id = request.form["candidate_id"]
+        role_id = request.form["role_id"]
+        status = request.form["status"]
+
         try:
             cur.execute("""
-            INSERT INTO Application (candidate_id, role_id, status)
-            VALUES (?, ?, ?)
-            """, (
-            request.form["candidate_id"],
-            request.form["role_id"],
-            request.form["status"]
-            ))
+                INSERT INTO Application (candidate_id, role_id, status)
+                VALUES (?, ?, ?)
+            """, (candidate_id, role_id, status))
+
             db.commit()
             flash("Application created successfully.", "success")
 
         except sqlite3.IntegrityError:
             flash("This candidate is already assigned to this role.", "error")
-
 
     applications = cur.execute("""
         SELECT Application.application_id,
@@ -282,6 +282,7 @@ def applications():
     roles = cur.execute("SELECT * FROM Role").fetchall()
 
     db.close()
+
     return render_template(
         "applications.html",
         applications=applications,
