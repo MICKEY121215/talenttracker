@@ -4,24 +4,24 @@ CREATE TABLE Client (
 );
 
 CREATE TABLE Role (
-   role_id INTEGER PRIMARY KEY AUTOINCREMENT,
-   client_id INTEGER,
-   title TEXT,
-   jd_text TEXT,
-   jd_file_path TEXT,
-   status TEXT,
-   FOREIGN KEY (client_id) REFERENCES Client(client_id)
-
+    role_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    client_id INTEGER,
+    title TEXT,
+    jd_text TEXT,
+    jd_file_path TEXT,
+    status TEXT,
+    FOREIGN KEY (client_id) REFERENCES Client(client_id),
+    UNIQUE(client_id, title)
 );
 
 CREATE TABLE Candidate (
-   candidate_id INTEGER PRIMARY KEY AUTOINCREMENT,
-   name TEXT,
-   linkedin_url TEXT,
-   skills TEXT,
-   experience_years INTEGER,
-   resume_file_path TEXT
-   
+    candidate_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    linkedin_url TEXT,
+    skills TEXT,
+    experience_years INTEGER,
+    resume_file_path TEXT,
+    UNIQUE(name, linkedin_url)
 );
 
 CREATE TABLE Application (
@@ -29,8 +29,5 @@ CREATE TABLE Application (
     candidate_id INTEGER,
     role_id INTEGER,
     status TEXT,
-    skill_match_percentage REAL,
-    last_updated TEXT,
-    FOREIGN KEY (candidate_id) REFERENCES Candidate(candidate_id),
-    FOREIGN KEY (role_id) REFERENCES Role(role_id)
+    UNIQUE(candidate_id, role_id)
 );

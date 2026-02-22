@@ -132,13 +132,16 @@ def roles():
             extracted_text = extract_text_from_pdf(save_path)
             jd_text = extract_skills(extracted_text)
 
-        cur.execute("""
-            INSERT INTO Role 
-            (client_id, title, jd_text, jd_file_path, status)
-            VALUES (?, ?, ?, ?, ?)
-        """, (client_id, title, jd_text, save_path, status))
+        try:
+            cur.execute("""
+              INSERT INTO Role 
+               (client_id, title, jd_text, jd_file_path, status)
+               VALUES (?, ?, ?, ?, ?)
+                """, (client_id, title, jd_text, save_path, status))
+            db.commit()
 
-        db.commit()
+        except sqlite3.IntegrityError:
+            print("Duplicate role prevented")
 
     roles = cur.execute("""
         SELECT Role.role_id,
@@ -194,13 +197,16 @@ def candidates():
             extracted_text = extract_text_from_pdf(save_path)
             skills = extract_skills(extracted_text)
 
-        cur.execute("""
-            INSERT INTO Candidate 
-            (name, linkedin_url, skills, experience_years, resume_file_path)
-            VALUES (?, ?, ?, ?, ?)
-        """, (name, linkedin, skills, experience, save_path))
+        try:
+            cur.execute("""
+               INSERT INTO Candidate 
+               (name, linkedin_url, skills, experience_years, resume_file_path)
+               VALUES (?, ?, ?, ?, ?)
+               """, (name, linkedin, skills, experience, save_path))
+            db.commit()
 
-        db.commit()
+        except sqlite3.IntegrityError:
+              print("Duplicate candidate prevented")
 
     candidates = cur.execute("SELECT * FROM Candidate").fetchall()
 
@@ -241,15 +247,20 @@ def applications():
     cur = db.cursor()
 
     if request.method == "POST":
-        cur.execute("""
+        try:
+            cur.execute("""
             INSERT INTO Application (candidate_id, role_id, status)
             VALUES (?, ?, ?)
-        """, (
+            """, (
             request.form["candidate_id"],
             request.form["role_id"],
             request.form["status"]
-        ))
-        db.commit()
+            ))
+            db.commit()
+            
+        except sqlite3.IntegrityError:
+            print("Duplicate application prevented")
+
 
     applications = cur.execute("""
         SELECT Application.application_id,
