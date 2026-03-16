@@ -63,6 +63,21 @@ def skill_match(jd_text, candidate_skills):
 
     return matched, missing, match_percent
 
+def extract_title(text):
+    import re
+
+    match = re.search(r'job title[:\-]\s*(.*)', text.lower())
+
+    if match:
+        return match.group(1).title()
+
+    match = re.search(r'([a-z\s]+developer|[a-z\s]+engineer|data scientist)', text.lower())
+
+    if match:
+        return match.group(1).title()
+
+    return "Unknown Role"
+
 @app.route("/dashboard")
 def dashboard():
     db = get_db()
@@ -135,6 +150,7 @@ def roles():
             jd_file.save(save_path)
 
             extracted_text = extract_text_from_pdf(save_path)
+            title = extract_title(extracted_text)
             jd_text = extract_skills(extracted_text)
 
         try:
