@@ -84,6 +84,29 @@ def extract_experience(text):
         return int(match.group(1))
     return 0
 
+def extract_name(text):
+
+    lines = text.split("\n")
+
+    for line in lines[:5]:
+        line = line.strip()
+
+        if len(line.split()) >= 2 and len(line.split()) <= 3:
+            return line
+
+    return "Unknown Candidate"
+
+def extract_linkedin(text):
+
+    pattern = r"(https?://)?(www\.)?linkedin\.com/in/[A-Za-z0-9_-]+"
+
+    match = re.search(pattern, text)
+
+    if match:
+        return match.group(0)
+
+    return "Not Found"
+
 @app.route("/dashboard")
 def dashboard():
     db = get_db()
@@ -223,6 +246,8 @@ def candidates():
             resume_file.save(save_path)
 
             extracted_text = extract_text_from_pdf(save_path)
+            name = extract_name(extracted_text)
+            linkedin = extract_linkedin(extracted_text)
             skills = extract_skills(extracted_text)
             experience = extract_experience(extracted_text)
 
