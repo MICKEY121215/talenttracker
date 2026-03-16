@@ -30,7 +30,7 @@ def extract_skills(text):
     clean_text = re.sub(r'[^\w\s]', ' ', text.lower())
     words = set(clean_text.split())
 
-    found_skills = []
+    found_skills = words & SKILL_SET
 
     for skill in SKILL_SET:
         if skill in clean_text:
