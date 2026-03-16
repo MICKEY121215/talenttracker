@@ -78,6 +78,12 @@ def extract_title(text):
 
     return "Unknown Role"
 
+def extract_experience(text):
+    match = re.search(r'(\d+)\s+years', text.lower())
+    if match:
+        return int(match.group(1))
+    return 0
+
 @app.route("/dashboard")
 def dashboard():
     db = get_db()
@@ -218,6 +224,7 @@ def candidates():
 
             extracted_text = extract_text_from_pdf(save_path)
             skills = extract_skills(extracted_text)
+            experience = extract_experience(extracted_text)
 
         try:
             cur.execute("""
