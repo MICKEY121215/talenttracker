@@ -59,7 +59,13 @@
           <td>{{ r[3] }}</td>
 
           <!-- JD FILE PATH -->
-          <td>{% if r[4] %} {{ r[4] }} {% else %} Not Uploaded {% endif %}</td>
+          <td>
+            {% if r[4] %}
+            <a href="/uploads/{{ r[4] }}" target="_blank">
+              <button type="button">View JD</button>
+            </a>
+            {% else %} Not Uploaded {% endif %}
+          </td>
 
           <td>
             <a
