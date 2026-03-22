@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash
+from flask import Flask, render_template, request, redirect, flash, send_from_directory
 import sqlite3
 import pdfplumber
 import os
@@ -106,6 +106,10 @@ def extract_linkedin(text):
         return match.group(0)
 
     return "Not Found"
+
+@app.route("/uploads/<path:filename>")
+def uploaded_file(filename):
+    return send_from_directory("uploads", filename)
 
 @app.route("/dashboard")
 def dashboard():

@@ -55,7 +55,13 @@
           <td>{{ c[3] }}</td>
           <td>{{ c[4] }}</td>
 
-          <td>{% if c[5] %} {{ c[5] }} {% else %} Not Uploaded {% endif %}</td>
+          <td>
+            {% if c[5] %}
+            <a href="/uploads/{{ c[5].split('uploads/')[1] }}" target="_blank">
+              View Resume
+            </a>
+            {% else %} Not Uploaded {% endif %}
+          </td>
 
           <td>
             <a

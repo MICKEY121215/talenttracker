@@ -61,7 +61,7 @@
           <!-- JD FILE PATH -->
           <td>
             {% if r[4] %}
-            <a href="/uploads/{{ r[4] }}" target="_blank">
+            <a href="/uploads/{{ r[4].split('uploads/')[1] }}" target="_blank">
               <button type="button">View JD</button>
             </a>
             {% else %} Not Uploaded {% endif %}
